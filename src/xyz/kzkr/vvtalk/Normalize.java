@@ -1,6 +1,39 @@
 package xyz.kzkr.vvtalk;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Normalize{
+
+	public static String urlcut(String text){
+		//URL省略処理
+		//URL判定基準を正規表現で指定
+		Matcher m=Pattern.compile("https?://\\S++").matcher(text);
+		m.reset();
+		boolean result=m.find();
+		if(result){
+			int co=0;//URLの数
+			do{
+				co++;
+				result=m.find();
+			}while(result);
+			m.reset();
+			result=m.find();
+			boolean b=true;
+			StringBuffer sb=new StringBuffer();
+			do{
+				if(b){//初回
+					b=false;
+					if(co==1) m.appendReplacement(sb,"URL省略");//対象が一つの時
+					else m.appendReplacement(sb,co+"件のURLを省略");
+				}else m.appendReplacement(sb,"");//2回目以降
+				result=m.find();
+			}while(result);
+			m.appendTail(sb);
+			text=sb.toString();
+		}
+		return text;
+	}
 	public static String filename(String g) {
 		String r="ファイル";
 		if(g.endsWith(".png")||g.endsWith(".gif")||g.endsWith(".jpg")||g.endsWith(".jpeg")
