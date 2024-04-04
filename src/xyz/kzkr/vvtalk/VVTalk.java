@@ -117,6 +117,7 @@ public class VVTalk extends ListenerAdapter{
 	}
 	private String toTalkString(Message m) {
 		String s=m.getContentDisplay();
+		s=Normalize.urlcut(s);
 		for(var f:m.getAttachments()){
 			s+=Normalize.filename(f.getFileName());
 		}
