@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -54,7 +55,8 @@ public class VVTalk extends ListenerAdapter{
 		VoiceSender sender=vc.get(gid);
 		if(sender!=null) {
 			if(sender.textChannel==cid) {
-				sender.insertQueue(event.getMessage().getContentDisplay());
+				String s=toTalkString(event.getMessage());
+				sender.insertQueue(s);
 			}
 			return;
 		}
@@ -112,5 +114,12 @@ public class VVTalk extends ListenerAdapter{
 			default:
 				System.out.printf("Unknown command %s used by %#s%n", event.getName(), event.getUser());
 		}
+	}
+	private String toTalkString(Message m) {
+		String s=m.getContentDisplay();
+		for(var f:m.getAttachments()){
+			s+=Normalize.filename(f.getFileName());
+		}
+		return s;
 	}
 }
