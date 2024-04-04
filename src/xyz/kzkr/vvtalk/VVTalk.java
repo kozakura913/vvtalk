@@ -76,10 +76,15 @@ public class VVTalk extends ListenerAdapter{
 					if(vc_status!=null) {
 						AudioChannelUnion voice_channel=vc_status.getChannel();
 						VoiceSender sender=vc.get(gid);
-						if(sender!=null) {
-							sender.exit();
+						if(sender!=null&&sender.isEquals(voice_channel)) {
+							//VC移動なし
+						}else {
+							if(sender!=null) {
+								event.reply("他のVCに移動するには切断する必要があります").setEphemeral(true).queue();
+								return;
+							}
+							sender=new VoiceSender(voice_channel);
 						}
-						sender=new VoiceSender(voice_channel);
 						sender.textChannel=event.getChannelIdLong();
 						OptionMapping speaker=event.getOption("speaker");
 						if(speaker!=null)sender.speaker=speaker.getAsInt();

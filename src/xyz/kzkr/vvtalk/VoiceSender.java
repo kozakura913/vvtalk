@@ -54,6 +54,11 @@ public class VoiceSender implements AudioSendHandler, ConnectionListener{
 		am.openAudioConnection(vc);
 		new Thread(this::mainLoop,"VoiceSenderLoop-"+vc.getId()).start();
 	}
+	public boolean isEquals(AudioChannelUnion voice_channel) {
+		long next=voice_channel.asVoiceChannel().getIdLong();
+		long current=vc.getIdLong();
+		return next==current;
+	}
 	public void insertQueue(String s){
 		if(stop)return;
 		if(s.isEmpty())return;
