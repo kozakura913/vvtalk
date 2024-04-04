@@ -33,7 +33,7 @@ public class VVTalk extends ListenerAdapter{
 				.addOption(OptionType.INTEGER, "speaker","声の質を整数値で指定")
 				.addOption(OptionType.NUMBER, "speed","読み上げ速度倍率")
 				.addOption(OptionType.NUMBER, "pitch","説明文"),
-			Commands.slash("stop_talk", "読み上げを停止します")
+			Commands.slash("end_talk", "読み上げを停止します")
 			.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.VOICE_SPEAK))
 			.setGuildOnly(true)
 		).queue();
@@ -97,7 +97,7 @@ public class VVTalk extends ListenerAdapter{
 					}
 				}
 				break;
-			case "stop_talk":
+			case "end_talk":
 				if(!event.getMember().hasPermission(Permission.VOICE_SPEAK)){
 					event.reply("権限不足").setEphemeral(true).queue();
 				}else {
