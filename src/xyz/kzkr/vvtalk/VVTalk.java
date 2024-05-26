@@ -122,9 +122,15 @@ public class VVTalk extends ListenerAdapter{
 	}
 	private String toTalkString(Message m) {
 		String s=m.getContentDisplay();
+		if(s.startsWith("```")) {
+			s="コードブロック省略";
+		}
 		s=Normalize.urlcut(s);
 		for(var f:m.getAttachments()){
 			s+=Normalize.filename(f.getFileName());
+		}
+		if(s.length()>100) {
+			s="長文省略";
 		}
 		return s;
 	}
