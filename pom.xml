@@ -33,6 +33,7 @@
 					<archive>
 						<manifest>
 							<mainClass>xyz.kzkr.vvtalk.VVTalk</mainClass>
+							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
 				</configuration>

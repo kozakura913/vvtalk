@@ -1,0 +1,14 @@
+services:
+  vvtalk:
+    build: .
+    restart: always
+    links:
+      - voicevox
+    environment:
+      JAVA_TOOL_OPTIONS: >
+        -Dvoicevox=http://voicevox:50021/
+        -Dtoken=YOUR_DISCORD_APP_TOKEN
+  voicevox:
+    restart: always
+    image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+
