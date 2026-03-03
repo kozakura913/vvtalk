@@ -3,9 +3,11 @@ package xyz.kzkr.vvtalk;
 import java.util.HashMap;
 import java.util.Objects;
 
+import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Message;
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -24,18 +27,21 @@ public class VVTalk extends ListenerAdapter{
 	private HashMap<Long,VoiceSender> vc=new HashMap<>();
 	public static void main(String[] args){
 		String token=Objects.requireNonNull(System.getProperty("token"));
-		JDA jda=JDABuilder.createDefault(token).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+		JDA jda=JDABuilder.createDefault(token)
+			.enableIntents(GatewayIntent.MESSAGE_CONTENT)
+			.setAudioModuleConfig(new AudioModuleConfig().withDaveSessionFactory(new JDaveSessionFactory()))
+			.build();
 		jda.addEventListener(new VVTalk());
 		jda.updateCommands().addCommands(
 			Commands.slash("start_talk", "読み上げを開始します")
 				.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.VOICE_SPEAK))
-				.setGuildOnly(true)
+				.setContexts(InteractionContextType.GUILD)
 				.addOption(OptionType.INTEGER, "speaker","声の質を整数値で指定")
 				.addOption(OptionType.NUMBER, "speed","読み上げ速度倍率")
 				.addOption(OptionType.NUMBER, "pitch","説明文"),
 			Commands.slash("end_talk", "読み上げを停止します")
-			.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.VOICE_SPEAK))
-			.setGuildOnly(true)
+				.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.VOICE_SPEAK))
+				.setContexts(InteractionContextType.GUILD)
 		).queue();
 		// optionally block until JDA is ready
 		try{
